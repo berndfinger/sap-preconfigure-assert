@@ -1,5 +1,7 @@
-sap-preconfigure
-================
+sap-preconfigure-assert
+=======================
+
+--- WIP ---
 
 This role configures a RHEL 7 or RHEL 8 system according to applicable SAP notes so that any SAP software can be installed. Future implementation may reduce the scope of this role, for example if certain installation or configuration steps are done in more specialized roles.
 
