@@ -1,0 +1,48 @@
+---
+# tasks file for sap-preconfigure: configuration
+
+# 04-linux-kernel-parameters.yml
+- debug:
+    msg: "SAP note 2002167 Step 4: Linux Kernel Parameters"
+
+- name: Check if vm.max_map_count is set to 2000000 in /etc/sysctl.d/sap.conf
+  command: awk 'BEGIN{FS="="}/vm.max_map_count/{print $NF}' /etc/sysctl.d/sap.conf
+  register: sap_conf_max_map_count_result
+  changed_when: no
+
+- assert:
+    that:
+      - sap_conf_max_map_count_result.stdout == '2000000'
+  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+
+- name: Check if vm.max_map_count is set to 2000000 as per sysctl
+  shell: sysctl vm.max_map_count | awk 'BEGIN{FS="="}/vm.max_map_count/{gsub (" ", ""); print $NF}'
+  register: sysctl_max_map_count_result
+  changed_when: no
+
+- assert:
+    that:
+      - sysctl_max_map_count_result.stdout == '2000000'
+  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+
+- name: Check if kernel.sem is set to 1250 256000 100 1024 in /etc/sysctl.d/sap.conf
+  shell: awk 'BEGIN{FS="="}/kernel.sem/{print $2}' /etc/sysctl.d/sap.conf | awk '{printf ("%s %s %s %s\n", $1, $2, $3, $4)}'
+  register: sap_conf_kernel_sem_result
+  changed_when: no
+
+- assert:
+    that:
+      - sap_conf_kernel_sem_result.stdout == '1250 256000 100 1024'
+  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+
+- name: Check if kernel.sem is set to 1250 256000 100 1024 as per sysctl
+  shell: sysctl kernel.sem | awk 'BEGIN{FS="="}/kernel.sem/{print $2}' | awk '{printf ("%s %s %s %s\n", $1, $2, $3, $4)}'
+  register: sap_conf_kernel_sem_result
+  changed_when: no
+
+- assert:
+    that:
+      - sap_conf_kernel_sem_result.stdout == '1250 256000 100 1024'
+  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+
+...

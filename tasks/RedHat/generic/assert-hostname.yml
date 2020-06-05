@@ -1,0 +1,21 @@
+---
+
+- debug:
+    msg: "imported RedHat/generic/assert-hostname.yml"
+
+- debug:
+    msg:
+      - "sap_hostname = {{ sap_hostname }}"
+
+- name: Check if short hostname is set
+  command: hostname
+  register: hostname_result
+  ignore_errors: yes
+  changed_when: no
+
+- assert:
+    that:
+      - hostname_result.stdout == '{{ sap_hostname }}'
+  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+
+...

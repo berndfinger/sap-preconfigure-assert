@@ -1,0 +1,63 @@
+---
+# tasks file for sap-preconfigure: configuration
+
+# 04-process-resource-limits.yml
+- debug:
+    msg: "SAP note 2002167 Step 5: Process Resource Limits"
+
+- name: Check if the hard limit for the max number of open files per process (nofile) is 32800 for group sapsys
+  command: awk '/sapsys/&&/nofile/&&/hard/{print $NF}' /etc/security/limits.d/99-sap.conf
+  register: awk_nofile_hard_result
+  changed_when: no
+
+- assert:
+    that:
+      - awk_nofile_hard_result.stdout == '32800'
+  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+
+- name: Check if the soft limit for the max number of open files per process (nofile) is 32800 for group sapsys
+  command: awk '/sapsys/&&/nofile/&&/soft/{print $NF}' /etc/security/limits.d/99-sap.conf
+  register: awk_nofile_soft_result
+  changed_when: no
+
+- assert:
+    that:
+      - awk_nofile_soft_result.stdout == '32800'
+  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+
+#- name: Set the hard and soft limit for the max number of open files per process (nofile) to 32800 for the database group
+#  pam_limits:
+#    dest: /etc/security/limits.d/99-sap.conf
+#    domain: "{{ sap_preconfigure_db_group_name }} "
+#    limit_item: nofile
+#    limit_type: "{{ line_item }}"
+#    value: "32800"
+#  with_items:
+#    - hard
+#    - soft
+#  loop_control:
+#    loop_var: line_item
+#  when:
+#    - sap_preconfigure_db_group_name is defined
+
+- name: Check if the soft limit for the max number of processes per user (nproc) is unlimited for group sapsys
+  command: awk '/sapsys/&&/nproc/&&/soft/{print $NF}' /etc/security/limits.d/99-sap.conf
+  register: awk_nofile_soft_result
+  changed_when: no
+
+- assert:
+    that:
+      - awk_nofile_soft_result.stdout == 'unlimited'
+  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+
+#- name: Set the soft limit for the max number of processes per user (nproc) to unlimited for the database group
+#  pam_limits:
+#    dest: /etc/security/limits.d/99-sap.conf
+#    domain: "{{ sap_preconfigure_db_group_name }} "
+#    limit_item: nproc
+#    limit_type: soft
+#    value: unlimited
+#  when:
+#    - sap_preconfigure_db_group_name is defined
+
+...

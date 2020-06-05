@@ -1,0 +1,28 @@
+---
+
+# vars file for sap-preconfigure
+
+__sap_preconfigure_assert_sapnotes:
+  - "2772999"
+
+__sap_preconfigure_assert_packagegroups_x86_64:
+  - "@server"
+
+__sap_preconfigure_assert_packagegroups_ppc64le:
+  - "@server"
+
+__sap_preconfigure_assert_packagegroups_s390x:
+  - "@server"
+
+__sap_preconfigure_assert_packagegroups: "{{ lookup('vars','__sap_preconfigure_assert_packagegroups_' + ansible_architecture|string ) }}"
+
+__sap_preconfigure_assert_packages:
+  - uuidd
+  - libnsl
+  - tcsh
+  - psmisc
+  - nfs-utils
+  - bind-utils
+  - compat-sap-c++-9
+
+...

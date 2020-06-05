@@ -1,0 +1,36 @@
+---
+# tasks file for sap-preconfigure: configuration
+
+# 06-additional-notes-for-installing-sap-systems.yml
+- debug:
+    msg: "SAP note 2002167 Step 6: Additional notes for installing SAP systems"
+
+- name: Check if file /usr/lib64/libldap.so.199 exists
+  shell: test -L /usr/lib64/libldap.so.199
+  register: test_link_libldap
+  ignore_errors: yes
+  changed_when: no
+
+- name:
+  assert:
+    that:
+      - test_link_libldap.rc == 0
+    fail_msg: 'File /usr/lib64/libldap.so.199 does not exist!'
+  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+
+- name: Check if file /usr/lib64/liblber.so.199 exists
+  shell: test -L /usr/lib64/liblber.so.199
+  register: test_link_liblber
+  ignore_errors: yes
+  changed_when: no
+
+- name:
+  assert:
+    that:
+      - test_link_liblber.rc == 0
+    fail_msg: 'File /usr/lib64/liblber.so.199 does not exist!'
+  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+
+- import_tasks: ../../RedHat/generic/assert-systemd-tmpfiles.yml
+
+...

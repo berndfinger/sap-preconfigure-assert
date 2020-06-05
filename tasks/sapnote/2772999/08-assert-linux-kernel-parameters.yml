@@ -1,0 +1,32 @@
+---
+# tasks file for sap-preconfigure: configuration
+
+# 08-configure-linux-kernel-parameters.yml
+- debug:
+    msg: "SAP note 2772999 Step 8: Configure Linux Kernel Parameters"
+
+- name: Check if vm.max_map_count is set to 2147483647 in /etc/sysctl.d/sap.conf
+  command: awk 'BEGIN{FS="="}/vm.max_map_count/{print $NF}' /etc/sysctl.d/sap.conf
+  register: awk_result
+  changed_when: no
+
+- assert:
+    that:
+      - awk_result.stdout == '2147483647'
+    fail_msg: "FAIL: The value of vm.max_map_count in /etc/sysctl.d/sap.conf is {{ awk_result.stdout }} but the expected value is 2147483647 !"
+    success_msg: "PASS: The value of vm.max_map_count in /etc/sysctl.d/sap.conf is {{ awk_result.stdout }}, as expected."
+  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+
+- name: Check if vm.max_map_count is set to 2147483647 as per sysctl
+  shell: sysctl vm.max_map_count | awk 'BEGIN{FS="="}/vm.max_map_count/{gsub (" ", ""); print $NF}'
+  register: sysctl_result
+  changed_when: no
+
+- assert:
+    that:
+      - sysctl_result.stdout == '2147483647'
+    fail_msg: "FAIL: The current value of vm.max_map_count is {{ sysctl_result.stdout }} but the expected value is 2147483647 !"
+    success_msg: "PASS: The current value of vm.max_map_count is {{ sysctl_result.stdout }}, as expected."
+  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+
+...

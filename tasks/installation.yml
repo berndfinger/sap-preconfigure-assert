@@ -1,0 +1,58 @@
+---
+# tasks file for sap-preconfigure: installation
+
+- name: Assert - Gather facts about installed packages
+  package_facts:
+    manager: auto
+
+- debug:
+    msg: ATTENTION - package check not yet implemented!
+
+- name: Check if required packages are installed
+  shell: yum info installed {{ __sap_preconfigure_assert_packages | map('quote') | join(' ') }} | awk '/Name/{n=$NF}/Version/{v=$NF}/Release/{r=$NF}/Description/{printf ("%s-%s-%s\n", n, v, r)}'
+#  shell: yum info installed "{{ item }}" | awk '/Name/{n=$NF}/Version/{v=$NF}/Release/{r=$NF}/Description/{printf ("%s-%s-%s\n", n, v, r)}'
+#  with_items: "{{ __sap_preconfigure_assert_packages }}"
+  register: yum_result
+  changed_when: no
+  args:
+    warn: false
+
+- debug:
+    var: yum_result
+
+- assert:
+    that:
+      - "'{{ line_item }}' in yum_result.stdout"
+  with_items:
+    - "{{ __sap_preconfigure_assert_packages }}"
+  loop_control:
+    loop_var: line_item
+  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+
+- set_fact:
+    needs_restarting_command: "needs-restarting -r"
+  when:
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution_major_version == '7'
+
+- set_fact:
+    needs_restarting_command: "yum needs-restarting -r"
+  when:
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution_major_version == '8'
+
+- name: Check if system needs to be restarted
+  command: "{{ needs_restarting_command }}"
+  register: needs_restarting_result
+  ignore_errors: true
+  changed_when: false
+  args:
+    warn: false
+  check_mode: false
+
+- name: Call Reboot handler if necessary
+  command: /bin/true
+  notify: "Reboot handler"
+  when: needs_restarting_result.rc == 1
+
+...
