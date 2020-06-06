@@ -67,7 +67,7 @@
     that:
       - shell_03_result.stdout == '1'
     fail_msg: "FAIL: There is more than one line containing {{ sap_hostname }}.{{ sap_domain }} in /etc/hosts!"
-    success_msg: "PASS: There is only one line containing {{ sap_hostname }}.{{ sap_domain }} in /etc/hosts!"
+    success_msg: "PASS: There is only one line containing {{ sap_hostname }}.{{ sap_domain }} in /etc/hosts."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
 - name: Check for duplicate entries of {{ sap_hostname }} in /etc/hosts

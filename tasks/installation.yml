@@ -1,11 +1,11 @@
 ---
 # tasks file for sap-preconfigure: installation
 
-- name: Assert - Gather facts about installed packages
+- name: Get list of installed packages
   package_facts:
     manager: auto
 
-- name: Find out if there are outstanding package updates
+- name: Get info about outstanding package updates
   command: yum check-update
   register: yum_check_update_result
   args:

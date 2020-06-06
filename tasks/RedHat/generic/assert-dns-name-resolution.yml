@@ -74,7 +74,7 @@
     that:
       - dig_reverse_result.stdout == '{{ sap_hostname }}.{{ sap_domain }}.'
     fail_msg: "FAIL: The reverse name resolution of sap_ip was not successful!"
-    success_msg: "PASS: The reverse name resolution of sap_ip was not successful."
+    success_msg: "PASS: The reverse name resolution of sap_ip was successful."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(true) }}"
 
 ...
