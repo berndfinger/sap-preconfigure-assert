@@ -15,8 +15,8 @@
   assert:
     that:
       - test_link_libldap.rc == 0
-    fail_msg: 'FAIL: File /usr/lib64/libldap.so.199 does not exist or is no link!'
-    success_msg: 'PASS: File /usr/lib64/libldap.so.199 exist and is a link!'
+    fail_msg: "FAIL: File /usr/lib64/libldap.so.199 does not exist or is no link!"
+    success_msg: "PASS: File /usr/lib64/libldap.so.199 exist and is a link!"
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
 - name: Get info about file /usr/lib64/liblber.so.199
@@ -29,8 +29,8 @@
   assert:
     that:
       - test_link_liblber.rc == 0
-    fail_msg: 'FAIL: File /usr/lib64/liblber.so.199 does not exist or is no link!'
-    success_msg: 'PASS: File /usr/lib64/liblber.so.199 exist and is a link!'
+    fail_msg: "FAIL: File /usr/lib64/liblber.so.199 does not exist or is no link!"
+    success_msg: "PASS: File /usr/lib64/liblber.so.199 exist and is a link!"
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
 - import_tasks: ../../RedHat/generic/assert-systemd-tmpfiles.yml

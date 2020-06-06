@@ -5,11 +5,11 @@ sap_preconfigure_assert_ignore_errors: no
 
 # For executing just some of the configuration steps, set sap_preconfigure_assert_config_all to "no"
 # and set one or more of the SAP notes related variables to "yes":
-sap_preconfigure_assert_config_all: no
+#sap_preconfigure_assert_config_all: no
 #sap_preconfigure_assert_2002167_02: yes
 #sap_preconfigure_assert_2002167_06: yes
 #sap_preconfigure_assert_1391070: yes
-sap_preconfigure_assert_2772999_07: yes
+#sap_preconfigure_assert_2772999_07: yes
 #sap_preconfigure_assert_2772999_10: yes
 
 sap_preconfigure_assert_min_package_check: yes

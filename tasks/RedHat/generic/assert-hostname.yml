@@ -13,8 +13,8 @@
   assert:
     that:
       - hostname_result.stdout == '{{ sap_hostname }}'
-    fail_msg: 'FAIL: hostname output does not match the content of variable sap_hostname!'
-    success_msg: 'PASS: hostname matches the content of variable sap_hostname.'
+    fail_msg: "FAIL: hostname output does not match the content of variable sap_hostname!"
+    success_msg: "PASS: hostname matches the content of variable sap_hostname."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
 ...
