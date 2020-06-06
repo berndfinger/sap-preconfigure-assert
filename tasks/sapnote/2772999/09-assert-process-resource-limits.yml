@@ -10,7 +10,8 @@
   register: awk_nofile_hard_result
   changed_when: no
 
-- assert:
+- name: Assert that the hard limit for the max number of open files per process (nofile) is 65536 for group sapsys
+  assert:
     that:
       - awk_nofile_hard_result.stdout == '65536'
     fail_msg: "FAIL: The hard limit of nofile for sapsys in /etc/security/limits.d/99-sap.conf is {{ awk_nofile_hard_result.stdout }} but the expected value is 2147483647 !"
@@ -22,7 +23,8 @@
   register: awk_nofile_soft_result
   changed_when: no
 
-- assert:
+- name: Assert that the soft limit for the max number of open files per process (nofile) is 65536 for group sapsys
+  assert:
     that:
       - awk_nofile_soft_result.stdout == '65536'
     fail_msg: "FAIL: The soft limit of nofile for sapsys in /etc/security/limits.d/99-sap.conf is {{ awk_nofile_soft_result.stdout }} but the expected value is 2147483647 !"

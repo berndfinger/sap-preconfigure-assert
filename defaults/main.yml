@@ -1,7 +1,7 @@
 ---
 # defaults file for sap-preconfigure
 
-sap_preconfigure_assert_ignore_errors: no
+sap_preconfigure_assert_ignore_errors: yes
 
 # For executing just some of the configuration steps, set sap_preconfigure_assert_config_all to "no"
 # and set one or more of the SAP notes related variables to "yes":
@@ -14,7 +14,7 @@ sap_preconfigure_assert_ignore_errors: no
 
 sap_preconfigure_assert_min_package_check: yes
 
-sap_preconfigure_assert_update: no
+sap_preconfigure_assert_update: yes
 
 sap_preconfigure_assert_fail_if_reboot_required: yes
 

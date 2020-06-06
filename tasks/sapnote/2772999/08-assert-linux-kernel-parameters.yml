@@ -10,7 +10,8 @@
   register: awk_result
   changed_when: no
 
-- assert:
+- name: Assert that vm.max_map_count is set to 2147483647 in /etc/sysctl.d/sap.conf
+  assert:
     that:
       - awk_result.stdout == '2147483647'
     fail_msg: "FAIL: The value of vm.max_map_count in /etc/sysctl.d/sap.conf is {{ awk_result.stdout }} but the expected value is 2147483647 !"
@@ -22,7 +23,8 @@
   register: sysctl_result
   changed_when: no
 
-- assert:
+- name: Assert that vm.max_map_count is set to 2147483647 as per sysctl
+  assert:
     that:
       - sysctl_result.stdout == '2147483647'
     fail_msg: "FAIL: The current value of vm.max_map_count is {{ sysctl_result.stdout }} but the expected value is 2147483647 !"

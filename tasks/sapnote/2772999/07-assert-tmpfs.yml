@@ -11,7 +11,8 @@
   ignore_errors: yes
   changed_when: no
 
-- assert:
+- name: Assert that the size of tmpfs is large enough as per /etc/fstab
+  assert:
     that:
       - "'{{ sap_preconfigure_assert_size_of_tmpfs_gb }}G' in awk_tmpfs_size_result.stdout"
     fail_msg: "FAIL: The size of tmpfs in /etc/fstab is {{ awk_tmpfs_size_result.stdout }} but the expected size is '{{ sap_preconfigure_assert_size_of_tmpfs_gb }}G!"
@@ -24,7 +25,8 @@
   ignore_errors: yes
   changed_when: no
 
-- assert:
+- name: Assert that the current size of tmpfs is large enough as per df output
+  assert:
     that:
       - "df_result.stdout == '{{ sap_preconfigure_assert_size_of_tmpfs_gb }}G'"
     fail_msg: "FAIL: The current size of tmpfs is {{ df_result.stdout }} but the expected size is '{{ sap_preconfigure_assert_size_of_tmpfs_gb }}G!"

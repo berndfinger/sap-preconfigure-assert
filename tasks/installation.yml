@@ -8,6 +8,26 @@
 - debug:
     msg: ATTENTION - package check not yet implemented!
 
+- name: Find out if there are outstanding package updates
+  command: yum check-update
+  register: yum_check_update_result
+  args:
+    warn: false
+  changed_when: false
+  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+
+- debug:
+    var: yum_check_update_result.rc
+
+- name: Assert that there are no more outstanding package updates
+  assert:
+    that:
+      - yum_check_update_result.rc == 0
+    fail_msg: "FAIL: System needs to be updated!"
+    success_msg: "PASS: There are no more outstanding package updates."
+  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+  when: sap_preconfigure_assert_update == true
+
 - name: Check if required packages are installed
   shell: yum info installed {{ __sap_preconfigure_assert_packages | map('quote') | join(' ') }} | awk '/Name/{n=$NF}/Version/{v=$NF}/Release/{r=$NF}/Description/{printf ("%s-%s-%s\n", n, v, r)}'
 #  shell: yum info installed "{{ item }}" | awk '/Name/{n=$NF}/Version/{v=$NF}/Release/{r=$NF}/Description/{printf ("%s-%s-%s\n", n, v, r)}'
@@ -44,15 +64,15 @@
 - name: Check if system needs to be restarted
   command: "{{ needs_restarting_command }}"
   register: needs_restarting_result
-  ignore_errors: true
   changed_when: false
   args:
     warn: false
   check_mode: false
+  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
-- name: Call Reboot handler if necessary
-  command: /bin/true
-  notify: "Reboot handler"
-  when: needs_restarting_result.rc == 1
+#- name: Call Reboot handler if necessary
+#  command: /bin/true
+#  notify: "Reboot handler"
+#  when: needs_restarting_result.rc == 1
 
 ...
