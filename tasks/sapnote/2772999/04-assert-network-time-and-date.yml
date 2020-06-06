@@ -11,7 +11,7 @@
   ignore_errors: yes
   changed_when: no
 
-- name: Checking if chronyd is enabled
+- name: Assert that chronyd is enabled
   assert:
     that:
       - "'/usr/lib/systemd/system/chronyd.service; enabled' in chronyd_status.stdout"
@@ -19,7 +19,7 @@
     success_msg: "PASS: Service chronyd is enabled."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
-- name: Checking if chronyd is active
+- name: Assert that chronyd is active
   assert:
     that:
       - "'active (running)' in chronyd_status.stdout"
