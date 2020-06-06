@@ -16,7 +16,7 @@
   ignore_errors: yes
   changed_when: no
 
-- name: Checking if uuidd is enabled (indirect)
+- name: Assert that uuidd is enabled (indirect)
   assert:
     that:
       - "'/usr/lib/systemd/system/uuidd.service; indirect' in uuidd_status.stdout"
@@ -24,7 +24,7 @@
     success_msg: "PASS: Service uuidd is enabled."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
-- name: Checking if uuidd is active
+- name: Assert that uuidd is active
   assert:
     that:
       - "'active (running)' in uuidd_status.stdout"
@@ -32,7 +32,7 @@
     success_msg: "PASS: Service uuidd is running."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
-- name: Checking if uuidd.socket is enabled
+- name: Assert that uuidd.socket is enabled
   assert:
     that:
       - "'/usr/lib/systemd/system/uuidd.socket; enabled' in uuidd_socket_status.stdout"
@@ -40,7 +40,7 @@
     success_msg: "PASS: Service uuidd.socket is enabled."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
-- name: Checking if uuidd.socket is active
+- name: Assert that uuidd.socket is active
   assert:
     that:
       - "'active (running)' in uuidd_socket_status.stdout"

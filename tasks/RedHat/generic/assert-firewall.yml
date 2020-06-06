@@ -13,7 +13,7 @@
   changed_when: no
   when: "'firewalld' in ansible_facts.packages"
 
-- name: Checking if firewalld is disabled
+- name: Assert that firewalld is disabled
   assert:
     that:
       - "'/usr/lib/systemd/system/firewalld.service; disabled' in firewalld_status.stdout"
@@ -21,7 +21,7 @@
     success_msg: "PASS: Service firewalld is disabled."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
-- name: Checking if firewalld is inactive
+- name: Assert that firewalld is inactive
   assert:
     that:
       - "'inactive (dead)' in firewalld_status.stdout"

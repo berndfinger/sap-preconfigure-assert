@@ -9,7 +9,8 @@
   register: getenforce_result
   changed_when: no
 
-- assert:
+- name: Assert that SElinux is disabled
+  assert: Assert that SElinux is disabled
     that: 
       - getenforce_result.stdout == 'Permissive' or getenforce_result.stdout == 'Disabled'
     fail_msg: "FAIL: SElinux is enabled!"

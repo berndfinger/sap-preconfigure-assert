@@ -5,44 +5,56 @@
 - debug:
     msg: "SAP note 2002167 Step 4: Linux Kernel Parameters"
 
-- name: Check if vm.max_map_count is set to 2000000 in /etc/sysctl.d/sap.conf
+- name: Get vm.max_map_count from /etc/sysctl.d/sap.conf
   command: awk 'BEGIN{FS="="}/vm.max_map_count/{print $NF}' /etc/sysctl.d/sap.conf
   register: sap_conf_max_map_count_result
   changed_when: no
 
-- assert:
+- name: Assert that vm.max_map_count is set to 2000000 in /etc/sysctl.d/sap.conf
+  assert:
     that:
       - sap_conf_max_map_count_result.stdout == '2000000'
+    fail_msg: 'FAIL: vm.max_map_count is not set to 2000000 in /etc/sysctl.d/sap.conf!'
+    success_msg: 'PASS: vm.max_map_count is set to 2000000 in /etc/sysctl.d/sap.conf.'
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
-- name: Check if vm.max_map_count is set to 2000000 as per sysctl
+- name: Get vm.max_map_count value from sysctl
   shell: sysctl vm.max_map_count | awk 'BEGIN{FS="="}/vm.max_map_count/{gsub (" ", ""); print $NF}'
   register: sysctl_max_map_count_result
   changed_when: no
 
-- assert:
+- name: Assert that the value of vm.max_map_count as per sysctl output is 2000000
+  assert:
     that:
       - sysctl_max_map_count_result.stdout == '2000000'
+    fail_msg: 'FAIL: vm.max_map_count is not set to 2000000 as per sysctl!'
+    success_msg: 'PASS: vm.max_map_count is set to 2000000 as per sysctl.'
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
-- name: Check if kernel.sem is set to 1250 256000 100 1024 in /etc/sysctl.d/sap.conf
+- name: Get kernel.sem from /etc/sysctl.d/sap.conf
   shell: awk 'BEGIN{FS="="}/kernel.sem/{print $2}' /etc/sysctl.d/sap.conf | awk '{printf ("%s %s %s %s\n", $1, $2, $3, $4)}'
   register: sap_conf_kernel_sem_result
   changed_when: no
 
-- assert:
+- name: Assert that kernel.sem is set to 1250 256000 100 1024 in /etc/sysctl.d/sap.conf
+  assert:
     that:
       - sap_conf_kernel_sem_result.stdout == '1250 256000 100 1024'
+    fail_msg: 'FAIL: kernel.sem is not set to 1250 256000 100 1024 in /etc/sysctl.d/sap.conf!'
+    success_msg: 'PASS: kernel.sem is set to 1250 256000 100 1024 in /etc/sysctl.d/sap.conf!'
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
-- name: Check if kernel.sem is set to 1250 256000 100 1024 as per sysctl
+- name: Get kernel.sem value from sysctl
   shell: sysctl kernel.sem | awk 'BEGIN{FS="="}/kernel.sem/{print $2}' | awk '{printf ("%s %s %s %s\n", $1, $2, $3, $4)}'
   register: sap_conf_kernel_sem_result
   changed_when: no
 
-- assert:
+- name: Assert that the value of kernel.sem as per sysctl output is 1250 256000 100 1024
+  assert:
     that:
       - sap_conf_kernel_sem_result.stdout == '1250 256000 100 1024'
+    fail_msg: 'FAIL: kernel.sem is not set to 1250 256000 100 1024 as per sysctl!'
+    success_msg: 'PASS: kernel.sem is set to 1250 256000 100 1024 as per sysctl.'
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
 ...
