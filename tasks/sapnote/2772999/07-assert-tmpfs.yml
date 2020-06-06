@@ -16,7 +16,7 @@
     that:
       - "'{{ sap_preconfigure_assert_size_of_tmpfs_gb }}G' in awk_tmpfs_size_result.stdout"
     fail_msg: "FAIL: The size of tmpfs in /etc/fstab is {{ awk_tmpfs_size_result.stdout }} but the expected size is '{{ sap_preconfigure_assert_size_of_tmpfs_gb }}G!"
-    success_msg: "PASS: The size of tmpfs in /etc/fstab is {{ awk_tmpfs_size_result.stdout }}, as expected."
+    success_msg: "PASS: The size of tmpfs in /etc/fstab is {{ awk_tmpfs_size_result.stdout }}."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
 - name: Check if /dev/shm is available and has the expected size
@@ -30,7 +30,7 @@
     that:
       - "df_result.stdout == '{{ sap_preconfigure_assert_size_of_tmpfs_gb }}G'"
     fail_msg: "FAIL: The current size of tmpfs is {{ df_result.stdout }} but the expected size is '{{ sap_preconfigure_assert_size_of_tmpfs_gb }}G!"
-    success_msg: "PASS: The current size of tmpfs is {{ df_result.stdout }}, as expected."
+    success_msg: "PASS: The current size of tmpfs is {{ df_result.stdout }}."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
 ...

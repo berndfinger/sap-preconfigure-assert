@@ -13,6 +13,12 @@ Role Variables
 
 - set in `defaults/main.yml`:
 
+### Ignore assert errors
+If the following variable is set to `yes`, the role will not fail in case of any assert errors. Default is `no`, meaning that the role will fail on each assertion error.
+```yaml
+sap_preconfigure_assert_ignore_errors
+```
+
 ### Perform only certain checks of SAP notes
 If the following variable is set to no, only certain steps of SAP notes will be checked as per setting of variable `sap_preconfigure_assert_<sap_note_number>_<step>`. If this variable is undefined or set to no, all steps of applicable SAP notes will be checked.
 ```yaml
@@ -28,6 +34,7 @@ sap_preconfigure_assert_2772999_[02...10], example: sap_preconfigure_assert_2772
 ```
 
 ### Minimum package check
+NOTE: This check has not yet been implemented.
 The following variable will check if packages are installed at minimum required versions as defined in files `vars/*.yml`. Default is `yes`.
 ```yaml
 sap_preconfigure_assert_min_package_check
@@ -107,13 +114,19 @@ Example Playbook
 ---
     - hosts: all
       roles:
-         - role: sap-assert-preconfigure
-         - role: sap-hana-assert-preconfigure
+         - role: sap-preconfigure-assert
 ```
 
 Example Usage
 -------------
-ansible-playbook -l remote_host site.yml
+```yaml
+ansible-playbook -l remote_host sap-assert.yml
+```
+For a compact output when running with variable `sap_preconfigure_assert_ignore_errors` to `yes`, you may use:
+```yaml
+ansible-playbook -l remote_host sap-assert.yml | awk '/FAIL:/||/PASS:/{sub ("    \"msg\": ", ""); print}'
+
+```
 
 License
 -------

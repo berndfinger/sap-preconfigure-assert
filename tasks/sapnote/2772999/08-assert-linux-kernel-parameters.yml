@@ -15,7 +15,7 @@
     that:
       - awk_result.stdout == '2147483647'
     fail_msg: "FAIL: The value of vm.max_map_count in /etc/sysctl.d/sap.conf is {{ awk_result.stdout }} but the expected value is 2147483647 !"
-    success_msg: "PASS: The value of vm.max_map_count in /etc/sysctl.d/sap.conf is {{ awk_result.stdout }}, as expected."
+    success_msg: "PASS: The value of vm.max_map_count in /etc/sysctl.d/sap.conf is {{ awk_result.stdout }}."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
 - name: Check if vm.max_map_count is set to 2147483647 as per sysctl
@@ -28,7 +28,7 @@
     that:
       - sysctl_result.stdout == '2147483647'
     fail_msg: "FAIL: The current value of vm.max_map_count is {{ sysctl_result.stdout }} but the expected value is 2147483647 !"
-    success_msg: "PASS: The current value of vm.max_map_count is {{ sysctl_result.stdout }}, as expected."
+    success_msg: "PASS: The current value of vm.max_map_count is {{ sysctl_result.stdout }}."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
 ...
