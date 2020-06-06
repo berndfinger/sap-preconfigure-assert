@@ -124,7 +124,7 @@ ansible-playbook -l remote_host sap-assert.yml
 ```
 For a compact output when running with variable `sap_preconfigure_assert_ignore_errors` to `yes`, you may use:
 ```yaml
-ansible-playbook -l remote_host sap-assert.yml | awk '/FAIL:/||/PASS:/{sub ("    \"msg\": ", ""); print}'
+ansible-playbook -l remote_host sap-assert.yml | awk '/FAIL:/||/WARN/||/PASS:/{sub ("    \"msg\": ", ""); print}'
 
 ```
 
