@@ -20,15 +20,15 @@
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
   when: sap_preconfigure_assert_update == true
 
+- debug:
+    msg: "WARN: Package group check not implemented. Please check manually!"
+
 - name: Check if required packages are installed
   shell: yum info installed {{ __sap_preconfigure_assert_packages | map('quote') | join(' ') }} | awk '/Name/{n=$NF}/Version/{v=$NF}/Release/{r=$NF}/Description/{printf ("%s\n", n)}'
   register: yum_result
   changed_when: no
   args:
     warn: false
-
-- debug:
-    msg: "WARN: Package group check not implemented. Please check manually!"
 
 - name: Assert that all required packages are installed
   assert:
