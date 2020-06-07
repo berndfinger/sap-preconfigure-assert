@@ -10,12 +10,12 @@
   register: awk_nofile_hard_result
   changed_when: no
 
-- name: Assert that the hard limit of nofile is 32800 for group sapsys
+- name: Assert that the hard limit of nofile for group sapsys is 32800 
   assert:
     that:
       - awk_nofile_hard_result.stdout == '32800'
-    fail_msg: "FAIL: The hard limit of nofile is not set to '32800' in /etc/security/limits.d/99-sap.conf!"
-    success_msg: "PASS: The hard limit of nofile is set to '32800' in /etc/security/limits.d/99-sap.conf."
+    fail_msg: "FAIL: The hard limit of nofile for group sapsys is not set to '32800' in /etc/security/limits.d/99-sap.conf!"
+    success_msg: "PASS: The hard limit of nofile for group sapsys is set to '32800' in /etc/security/limits.d/99-sap.conf."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
 - name: Get the soft limit of nofile for group sapsys
@@ -23,15 +23,15 @@
   register: awk_nofile_soft_result
   changed_when: no
 
-- name: Assert that the soft limit of nofile is 32800 for group sapsys
+- name: Assert that the soft limit of nofile for group sapsys is 32800
   assert:
     that:
       - awk_nofile_soft_result.stdout == '32800'
-    fail_msg: "FAIL: The soft limit of nofile is not set to '32800' in /etc/security/limits.d/99-sap.conf!"
-    success_msg: "PASS: The soft limit of nofile is set to '32800' in /etc/security/limits.d/99-sap.conf."
+    fail_msg: "FAIL: The soft limit of nofile for group sapsys is not set to '32800' in /etc/security/limits.d/99-sap.conf!"
+    success_msg: "PASS: The soft limit of nofile for group sapsys is set to '32800' in /etc/security/limits.d/99-sap.conf."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
-#- name: Set the hard and soft limit of nofile to 32800 for the database group
+#- name: Set the hard and soft limit of nofile for the database group to 32800
 #  pam_limits:
 #    dest: /etc/security/limits.d/99-sap.conf
 #    domain: "{{ sap_preconfigure_assert_db_group_name }} "
