@@ -1,10 +1,6 @@
 ---
 # tasks file for sap-preconfigure: installation
 
-- name: Get list of installed packages
-  package_facts:
-    manager: auto
-
 - name: Get info about outstanding package updates
   command: yum check-update
   register: yum_check_update_result

@@ -12,6 +12,10 @@
     - 'role::sap-preconfigure-assert:install'
     - 'role::sap-preconfigure-assert:config'
 
+- name: Get list of installed packages
+  package_facts:
+    manager: auto
+
 - import_tasks: installation.yml
   tags:
     - 'role::sap-preconfigure-assert'

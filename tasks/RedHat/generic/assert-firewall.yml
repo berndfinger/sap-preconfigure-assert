@@ -1,32 +1,49 @@
 ---
 # tasks file for sap-preconfigure: configuration
 
-# 05-configure-firewall.yml
-
 - debug:
     msg: "imported RedHat/generic/assert-firewall.yml"
 
-- name: Get status of firewalld
-  command: systemctl status firewalld
-  register: firewalld_status
-  ignore_errors: yes
-  changed_when: no
+- debug:
+    var: ansible_facts.packages['firewalld']
+
+#- name: Check firewalld
+#  block:
+#    - name: Assert that firewalld is disabled
+#      assert:
+#        that:
+#          - "'firewalld' in ansible_facts.packages.name"
+
+- name: Check firewalld
+  block:
+    - name: Get status of firewalld
+      command: systemctl status firewalld
+      register: firewalld_status
+      ignore_errors: yes
+      changed_when: no
+
+    - name: Assert that firewalld is disabled
+      assert:
+  	that:
+  	  - "'/usr/lib/systemd/system/firewalld.service; disabled' in firewalld_status.stdout"
+  	fail_msg: "FAIL: Service 'firewalld' is not disabled!"
+  	success_msg: "PASS: Service 'firewalld' is disabled."
+      ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+    
+    - name: Assert that firewalld is inactive
+      assert:
+  	that:
+  	  - "'inactive (dead)' in firewalld_status.stdout"
+        fail_msg: "FAIL: Service 'firewalld' is active!"
+        success_msg: "PASS: Service 'firewalld' is inactive."
+      ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+    
   when: "'firewalld' in ansible_facts.packages"
 
-- name: Assert that firewalld is disabled
-  assert:
-    that:
-      - "'/usr/lib/systemd/system/firewalld.service; disabled' in firewalld_status.stdout"
-    fail_msg: "FAIL: Service 'firewalld' is not disabled!"
-    success_msg: "PASS: Service 'firewalld' is disabled."
-  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
-
-- name: Assert that firewalld is inactive
-  assert:
-    that:
-      - "'inactive (dead)' in firewalld_status.stdout"
-    fail_msg: "FAIL: Service 'firewalld' is active!"
-    success_msg: "PASS: Service 'firewalld' is inactive."
-  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+- name: Report firewall install status:
+  debug:
+    msg: "PASS: Service 'firewalld' is not installed."
+      
+  when: "'firewalld' not in ansible_facts.packages"
 
 ...
