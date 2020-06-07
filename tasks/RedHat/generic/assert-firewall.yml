@@ -17,16 +17,16 @@
   assert:
     that:
       - "'/usr/lib/systemd/system/firewalld.service; disabled' in firewalld_status.stdout"
-    fail_msg: "FAIL: Service firewalld is NOT disabled!"
-    success_msg: "PASS: Service firewalld is disabled."
+    fail_msg: "FAIL: Service 'firewalld' is not disabled!"
+    success_msg: "PASS: Service 'firewalld' is disabled."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
 - name: Assert that firewalld is inactive
   assert:
     that:
       - "'inactive (dead)' in firewalld_status.stdout"
-    fail_msg: "FAIL: Service firewalld is active!"
-    success_msg: "PASS: Service firewalld is inactive."
+    fail_msg: "FAIL: Service 'firewalld' is active!"
+    success_msg: "PASS: Service 'firewalld' is inactive."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
 ...
