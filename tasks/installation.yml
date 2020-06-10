@@ -66,4 +66,12 @@
   check_mode: false
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
+- name: Assert that system needs no restart
+  assert:
+    that:
+      - needs_restarting_result.rc == 0
+    fail_msg: "FAIL: System needs to be restarted!"
+    success_msg: "PASS: System needs no restart."
+  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+
 ...
