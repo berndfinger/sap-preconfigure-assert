@@ -47,7 +47,7 @@
 
 - name: Get kernel.sem value from sysctl
 #  shell: sysctl kernel.sem | awk 'BEGIN{FS="="}/kernel.sem/{print $2}' | awk '{printf ("%s %s %s %s\n", $1, $2, $3, $4)}'
-  shell: sysctl -n kernel.sem | awk '{gsub ("   ", " "); print}'
+  shell: sysctl -n kernel.sem | awk '{gsub ("\t", " "); print}'
   register: sap_conf_kernel_sem_result
   changed_when: no
 
