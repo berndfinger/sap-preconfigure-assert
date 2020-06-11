@@ -34,7 +34,6 @@ sap_preconfigure_assert_2772999_[02...10], example: sap_preconfigure_assert_2772
 ```
 
 ### Minimum package check
-NOTE: This check has not yet been implemented.
 The following variable will check if packages are installed at minimum required versions as defined in files `vars/*.yml`. Default is `yes`.
 ```yaml
 sap_preconfigure_assert_min_package_check
@@ -47,13 +46,12 @@ sap_preconfigure_assert_fail_if_reboot_required
 ```
 
 ### Define SELinux state
-The following variable allows for defining the desired SELinux state. Default is `disabled`.
+By setting the following variable, a desired SELinux state can be checked. Default is `disabled`.
 ```yaml
 sap_preconfigure_assert_selinux_state
 ```
 
 ### Perform a yum update
-- This function is currently not implemented -
 If the following variable is set to `yes`, the role will check if a `yum update` will update any software on the managed node. Default is `no`. \
 *Note*: The outcome of a `yum update` depends on the managed node's configuration for sticky OS minor version, see the description of the release option in `man subscription-manager`. For SAP HANA installations, setting a certain minor version with `subscscription-manager release --set=X.Y` is a strict requirement.
 ```yaml

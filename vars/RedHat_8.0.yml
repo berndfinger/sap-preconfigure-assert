@@ -24,7 +24,9 @@ __sap_preconfigure_assert_packages:
   - nfs-utils
   - bind-utils
 
-__sap_preconfigure_assert_min_pkgs:
+# Minimum required package levels for SAP (generic) on RHEL 8.0:
+__sap_preconfigure_assert_min_packages_8:
   - [ 'setup' , '2.12.2-2.el8_0.1' ]
 
+__sap_preconfigure_assert_min_packages: "{{ lookup('vars','__sap_preconfigure_assert_min_packages_' + ansible_distribution_major_version|string) }}"
 ...

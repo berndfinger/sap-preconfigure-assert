@@ -42,8 +42,51 @@
     loop_var: line_item
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
+- name: Check if minimum required package versions are installed
+  block:
+  - name: Gather package facts
+    package_facts:
+
+  - set_fact:
+      reqpkgs: "{{ __sap_preconfigure_assert_min_packages }}"
+
+  - debug:
+      var: reqpkgs
+
+  - set_fact:
+      pkgs_to_install_update: |-
+        {% set ns = namespace() %}
+        {% set ns.pkgs = [] %}
+        {% for reqpkg in reqpkgs %}
+        {%   if not reqpkg[0] in ansible_facts.packages %}
+        {%     set _ = ns.pkgs.append("Package " + reqpkg | join('-') + " is missing and needs to be installed!") %}
+        {%   else %}
+        {%     set pkg = ansible_facts.packages[reqpkg[0]][-1] %}
+        {%     set verrel = pkg.version ~ '-' ~ pkg.release %}
+        {%     if reqpkg[1].replace ("el", "000") is version(verrel.replace ("el", "000"), '>') %}
+        {%       set _ = ns.pkgs.append("Package " + pkg.name + "-" + verrel + " needs to be updated to: " + reqpkg | join('-') + "!") %}
+        {%     else %}
+        {%       set _ = ns.pkgs.append("Package " + reqpkg | join('-') + " is already installed with same or later version. Currently installed: " + pkg.name + "-" + verrel)  %}
+        {%     endif %}
+        {%   endif %}
+        {% endfor %}
+        {{ ns.pkgs }}
+
+  - name: Assert that minimum required package versions are installed
+    assert:
+      that: "'is already installed' in line_item"
+      fail_msg: "FAIL: {{ line_item }}"
+      success_msg: "PASS: {{ line_item }}"
+    loop: "{{ pkgs_to_install_update | trim() }}"
+    loop_control:
+      loop_var: line_item
+    ignore_errors: yes
+  when: __sap_preconfigure_assert_min_packages != ""
+
 - debug:
-    msg: "WARN: Minimum package check not implemented. Please check manually!"
+    msg: "PASS: No minimum required package version defined (variable __sap_preconfigure_assert_min_packages)."
+  ignore_errors: yes
+  when: __sap_preconfigure_assert_min_packages == ""
 
 - set_fact:
     needs_restarting_command: "needs-restarting -r"

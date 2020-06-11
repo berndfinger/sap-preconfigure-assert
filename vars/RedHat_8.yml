@@ -25,4 +25,9 @@ __sap_preconfigure_assert_packages:
   - bind-utils
   - compat-sap-c++-9
 
+# Minimum required package levels for SAP (generic) on RHEL 8 (except 8.0, 8.1): None
+__sap_preconfigure_assert_min_packages_8:
+
+__sap_preconfigure_assert_min_packages: "{{ lookup('vars','__sap_preconfigure_assert_min_packages_' + ansible_distribution_major_version|string) }}"
+
 ...
