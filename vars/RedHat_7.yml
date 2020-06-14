@@ -6,23 +6,26 @@ __sap_preconfigure_assert_sapnotes:
   - "2002167"
   - "1391070"
 
+__sap_preconfigure_assert_envgroups:
+  - "infrastructure-server-environment"
+
 __sap_preconfigure_assert_packagegroups_x86_64:
-  - "@base"
-  - "@compat-libraries"
-  - "@large-systems"
-  - "@network-file-system-client"
-  - "@performance"
+  - "base"
+  - "compat-libraries"
+  - "large-systems"
+  - "network-file-system-client"
+  - "performance"
 
 __sap_preconfigure_assert_packagegroups_ppc64le:
-  - "@base"
-  - "@compat-libraries"
+  - "base"
+  - "compat-libraries"
 
 __sap_preconfigure_assert_packagegroups_s390x:
-  - "@base"
-  - "@compat-libraries"
-  - "@large-systems"
-  - "@network-file-system-client"
-  - "@performance"
+  - "base"
+  - "compat-libraries"
+  - "large-systems"
+  - "network-file-system-client"
+  - "performance"
 
 __sap_preconfigure_assert_packagegroups: "{{ lookup('vars','__sap_preconfigure_assert_packagegroups_' + ansible_architecture|string ) }}"
 
