@@ -33,4 +33,7 @@
     success_msg: "PASS: The soft limit of nofile for group sapsys in /etc/security/limits.d/99-sap.conf is '{{ awk_nofile_soft_result.stdout }}'."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
+- debug:
+    msg: "WARN: Check of the hard and soft limit of nofile for the database group not implemented. Please check manually!"
+
 ...
