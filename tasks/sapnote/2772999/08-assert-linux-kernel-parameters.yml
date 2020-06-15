@@ -9,6 +9,7 @@
   command: awk 'BEGIN{FS="="}/vm.max_map_count/{print $NF}' /etc/sysctl.d/sap.conf
   register: sap_conf_max_map_count_result
   changed_when: no
+  ignore_errors: yes
 
 - name: Assert that vm.max_map_count is set to 2147483647 in /etc/sysctl.d/sap.conf
   assert:
@@ -23,6 +24,7 @@
   shell: sysctl -n vm.max_map_count
   register: sysctl_max_map_count_result
   changed_when: no
+  ignore_errors: yes
 
 - name: Assert that vm.max_map_count is set to 2147483647 as per sysctl
   assert:

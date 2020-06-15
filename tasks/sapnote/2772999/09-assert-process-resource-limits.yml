@@ -9,6 +9,7 @@
   command: awk '/sapsys/&&/nofile/&&/hard/{print $NF}' /etc/security/limits.d/99-sap.conf
   register: awk_nofile_hard_result
   changed_when: no
+  ignore_errors: yes
 
 - name: Assert that the hard limit of nofile for group sapsys is 65536
   assert:
@@ -22,6 +23,7 @@
   command: awk '/sapsys/&&/nofile/&&/soft/{print $NF}' /etc/security/limits.d/99-sap.conf
   register: awk_nofile_soft_result
   changed_when: no
+  ignore_errors: yes
 
 - name: Assert that the soft limit of nofile for group sapsys is 65536
   assert:
@@ -30,20 +32,5 @@
     fail_msg: "FAIL: The soft limit of nofile for group sapsys in /etc/security/limits.d/99-sap.conf is '{{ awk_nofile_soft_result.stdout }}' but the expected value is 2147483647 !"
     success_msg: "PASS: The soft limit of nofile for group sapsys in /etc/security/limits.d/99-sap.conf is '{{ awk_nofile_soft_result.stdout }}'."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
-
-#- name: Set the hard and soft limit of nofile for the database group to 65536
-#  pam_limits:
-#    dest: /etc/security/limits.d/99-sap.conf
-#    domain: "{{ sap_preconfigure_assert_db_group_name }} "
-#    limit_item: nofile
-#    limit_type: "{{ line_item }}"
-#    value: "65536"
-#  with_items:
-#    - hard
-#    - soft
-#  loop_control:
-#    loop_var: line_item
-#  when:
-#    - sap_preconfigure_assert_db_group_name is defined
 
 ...
