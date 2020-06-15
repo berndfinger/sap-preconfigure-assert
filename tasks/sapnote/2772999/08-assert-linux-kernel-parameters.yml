@@ -15,7 +15,7 @@
   assert:
     that:
       - sap_conf_max_map_count_result.stdout == '2147483647'
-    fail_msg: "FAIL: The value of 'vm.max_map_count' in /etc/sysctl.d/sap.conf is {{ sap_conf_max_map_count_result.stdout }} but the expected value is '2147483647'!"
+    fail_msg: "FAIL: The value of 'vm.max_map_count' in /etc/sysctl.d/sap.conf is '{{ sap_conf_max_map_count_result.stdout }}' but the expected value is '2147483647'!"
     success_msg: "PASS: The value of 'vm.max_map_count' in /etc/sysctl.d/sap.conf is '{{ sap_conf_max_map_count_result.stdout }}'."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
