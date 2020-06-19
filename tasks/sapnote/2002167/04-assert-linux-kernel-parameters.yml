@@ -6,7 +6,7 @@
     msg: "SAP note 2002167 Step 4: Linux Kernel Parameters"
 
 - name: Get vm.max_map_count from /etc/sysctl.d/sap.conf
-  command: awk 'BEGIN{FS="="}/vm.max_map_count/{print $NF}' /etc/sysctl.d/sap.conf
+  command: awk 'BEGIN{FS="="}/vm.max_map_count/{split ($2, a, " "); print a[1]}' /etc/sysctl.d/sap.conf
   register: sap_conf_max_map_count_result
   changed_when: no
 
@@ -14,12 +14,11 @@
   assert:
     that:
       - sap_conf_max_map_count_result.stdout == '2000000'
-    fail_msg: "FAIL: The value of 'vm.max_map_count' in /etc/sysctl.d/sap.conf is {{ sap_conf_max_map_count_result.stdout }} but the expected value is '2000000'!"
+    fail_msg: "FAIL: The value of 'vm.max_map_count' in /etc/sysctl.d/sap.conf is '{{ sap_conf_max_map_count_result.stdout }}' but the expected value is '2000000'!"
     success_msg: "PASS: The value of 'vm.max_map_count' in /etc/sysctl.d/sap.conf is '{{ sap_conf_max_map_count_result.stdout }}'."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
 - name: Get vm.max_map_count value from sysctl
-#  shell: sysctl vm.max_map_count | awk 'BEGIN{FS="="}/vm.max_map_count/{gsub (" ", ""); print $NF}'
   shell: sysctl -n vm.max_map_count
   register: sysctl_max_map_count_result
   changed_when: no
@@ -33,7 +32,7 @@
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
 - name: Get kernel.sem from /etc/sysctl.d/sap.conf
-  shell: awk 'BEGIN{FS="="}/kernel.sem/{print $2}' /etc/sysctl.d/sap.conf | awk '{printf ("%s %s %s %s\n", $1, $2, $3, $4)}'
+  shell: awk 'BEGIN{FS="="}/kernel.sem/{split ($2, a, " "); print a[1], a[2], a[3], a[4]}' /etc/sysctl.d/sap.conf
   register: sap_conf_kernel_sem_result
   changed_when: no
 
@@ -46,7 +45,6 @@
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
 - name: Get kernel.sem value from sysctl
-#  shell: sysctl kernel.sem | awk 'BEGIN{FS="="}/kernel.sem/{print $2}' | awk '{printf ("%s %s %s %s\n", $1, $2, $3, $4)}'
   shell: sysctl -n kernel.sem | awk '{gsub ("\t", " "); print}'
   register: sap_conf_kernel_sem_result
   changed_when: no
