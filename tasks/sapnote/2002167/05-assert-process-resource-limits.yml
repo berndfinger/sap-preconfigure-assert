@@ -14,8 +14,8 @@
   assert:
     that:
       - awk_nofile_hard_result.stdout == '32800'
-    fail_msg: "FAIL: The hard limit of nofile for group sapsys is not set to '32800' in /etc/security/limits.d/99-sap.conf!"
-    success_msg: "PASS: The hard limit of nofile for group sapsys is set to '32800' in /etc/security/limits.d/99-sap.conf."
+    fail_msg: "FAIL: The hard limit of nofile for group 'sapsys' is not set to '32800' in /etc/security/limits.d/99-sap.conf!"
+    success_msg: "PASS: The hard limit of nofile for group 'sapsys' is set to '32800' in /etc/security/limits.d/99-sap.conf."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
 - name: Get the soft limit of nofile for group sapsys
@@ -31,20 +31,39 @@
     success_msg: "PASS: The soft limit of nofile for group sapsys is set to '32800' in /etc/security/limits.d/99-sap.conf."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
-#- name: Set the hard and soft limit of nofile for the database group to 32800
-#  pam_limits:
-#    dest: /etc/security/limits.d/99-sap.conf
-#    domain: "{{ sap_preconfigure_assert_db_group_name }} "
-#    limit_item: nofile
-#    limit_type: "{{ line_item }}"
-#    value: "32800"
-#  with_items:
-#    - hard
-#    - soft
-#  loop_control:
-#    loop_var: line_item
-#  when:
-#    - sap_preconfigure_assert_db_group_name is defined
+- name: Get the hard limit of nofile for the database group
+  command: "awk '/@{{ sap_preconfigure_assert_db_group_name }}/&&/nofile/&&/hard/{print $NF}' /etc/security/limits.d/99-sap.conf"
+  register: awk_db_group_nofile_hard_result
+  changed_when: no
+  when:
+    - sap_preconfigure_assert_db_group_name is defined
+
+- name: Assert that the hard limit of nofile for the database group is 32800 
+  assert:
+    that:
+      - awk_db_group_nofile_hard_result.stdout == '32800'
+    fail_msg: "FAIL: The hard limit of nofile for group '{{ sap_preconfigure_assert_db_group_name }}' is not set to '32800' in /etc/security/limits.d/99-sap.conf!"
+    success_msg: "PASS: The hard limit of nofile for group '{{ sap_preconfigure_assert_db_group_name }}' is set to '32800' in /etc/security/limits.d/99-sap.conf."
+  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+  when:
+    - sap_preconfigure_assert_db_group_name is defined
+
+- name: Get the soft limit of nofile for the database group
+  command: "awk '/@{{ sap_preconfigure_assert_db_group_name }}/&&/nofile/&&/soft/{print $NF}' /etc/security/limits.d/99-sap.conf"
+  register: awk_db_group_nofile_soft_result
+  changed_when: no
+  when:
+    - sap_preconfigure_assert_db_group_name is defined
+
+- name: Assert that the soft limit of nofile for the database group is 32800 
+  assert:
+    that:
+      - awk_db_group_nofile_soft_result.stdout == '32800'
+    fail_msg: "FAIL: The soft limit of nofile for group '{{ sap_preconfigure_assert_db_group_name }}' is not set to '32800' in /etc/security/limits.d/99-sap.conf!"
+    success_msg: "PASS: The soft limit of nofile for group '{{ sap_preconfigure_assert_db_group_name }}' is set to '32800' in /etc/security/limits.d/99-sap.conf."
+  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+  when:
+    - sap_preconfigure_assert_db_group_name is defined
 
 - name: Get the soft limit of nproc for group sapsys
   command: awk '/sapsys/&&/nproc/&&/soft/{print $NF}' /etc/security/limits.d/99-sap.conf
@@ -55,18 +74,25 @@
   assert:
     that:
       - awk_nofile_soft_result.stdout == 'unlimited'
-    fail_msg: "FAIL: The soft limit of nproc is not set to 'unlimited' in /etc/security/limits.d/99-sap.conf!"
-    success_msg: "PASS: The soft limit of nproc is set to 'unlimited' in /etc/security/limits.d/99-sap.conf."
+    fail_msg: "FAIL: The soft limit of nproc for group 'sapsys' is not set to 'unlimited' in /etc/security/limits.d/99-sap.conf!"
+    success_msg: "PASS: The soft limit of nproc for group 'sapsys' is set to 'unlimited' in /etc/security/limits.d/99-sap.conf."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
-#- name: Set the soft limit of nproc to unlimited for the database group
-#  pam_limits:
-#    dest: /etc/security/limits.d/99-sap.conf
-#    domain: "{{ sap_preconfigure_assert_db_group_name }} "
-#    limit_item: nproc
-#    limit_type: soft
-#    value: unlimited
-#  when:
-#    - sap_preconfigure_assert_db_group_name is defined
+- name: Get the soft limit of nproc for the database group
+  command: "awk '/@{{ sap_preconfigure_assert_db_group_name }}/&&/nproc/&&/soft/{print $NF}' /etc/security/limits.d/99-sap.conf"
+  register: awk_db_group_nproc_soft_result
+  changed_when: no
+  when:
+    - sap_preconfigure_assert_db_group_name is defined
+
+- name: Assert that the soft limit of nproc for the database group is unlimited 
+  assert:
+    that:
+      - awk_db_group_nproc_soft_result.stdout == 'unlimited'
+    fail_msg: "FAIL: The soft limit of nproc for group '{{ sap_preconfigure_assert_db_group_name }}' is not set to 'unlimited' in /etc/security/limits.d/99-sap.conf!"
+    success_msg: "PASS: The soft limit of nproc for group '{{ sap_preconfigure_assert_db_group_name }}' is set to 'unlimited' in /etc/security/limits.d/99-sap.conf."
+  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+  when:
+    - sap_preconfigure_assert_db_group_name is defined
 
 ...

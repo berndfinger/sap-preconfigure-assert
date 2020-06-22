@@ -15,8 +15,8 @@
   assert:
     that:
       - awk_nofile_hard_result.stdout == '65536'
-    fail_msg: "FAIL: The hard limit of nofile for group sapsys in /etc/security/limits.d/99-sap.conf is '{{ awk_nofile_hard_result.stdout }}' but the expected value is 2147483647 !"
-    success_msg: "PASS: The hard limit of nofile for group sapsys in /etc/security/limits.d/99-sap.conf is '{{ awk_nofile_hard_result.stdout }}'."
+    fail_msg: "FAIL: The hard limit of nofile for group 'sapsys' in /etc/security/limits.d/99-sap.conf is '{{ awk_nofile_hard_result.stdout }}' but the expected value is 2147483647 !"
+    success_msg: "PASS: The hard limit of nofile for group 'sapsys' in /etc/security/limits.d/99-sap.conf is '{{ awk_nofile_hard_result.stdout }}'."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
 - name: Check if the soft limit of nofile for group sapsys is 65536
@@ -29,11 +29,42 @@
   assert:
     that:
       - awk_nofile_soft_result.stdout == '65536'
-    fail_msg: "FAIL: The soft limit of nofile for group sapsys in /etc/security/limits.d/99-sap.conf is '{{ awk_nofile_soft_result.stdout }}' but the expected value is 2147483647 !"
-    success_msg: "PASS: The soft limit of nofile for group sapsys in /etc/security/limits.d/99-sap.conf is '{{ awk_nofile_soft_result.stdout }}'."
+    fail_msg: "FAIL: The soft limit of nofile for group 'sapsys' in /etc/security/limits.d/99-sap.conf is '{{ awk_nofile_soft_result.stdout }}' but the expected value is 2147483647 !"
+    success_msg: "PASS: The soft limit of nofile for group 'sapsys' in /etc/security/limits.d/99-sap.conf is '{{ awk_nofile_soft_result.stdout }}'."
   ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
 
-- debug:
-    msg: "WARN: Check of the hard and soft limit of nofile for the database group not implemented. Please check manually!"
+- name: Get the hard limit of nofile for the database group
+  command: "awk '/@{{ sap_preconfigure_assert_db_group_name }}/&&/nofile/&&/hard/{print $NF}' /etc/security/limits.d/99-sap.conf"
+  register: awk_db_group_nofile_hard_result
+  changed_when: no
+  when:
+    - sap_preconfigure_assert_db_group_name is defined
+
+- name: Assert that the hard limit of nofile for the database group is 65536
+  assert:
+    that:
+      - awk_db_group_nofile_hard_result.stdout == '65536'
+    fail_msg: "FAIL: The hard limit of nofile for group '{{ sap_preconfigure_assert_db_group_name }}' is not set to '65536' in /etc/security/limits.d/99-sap.conf!"
+    success_msg: "PASS: The hard limit of nofile for group '{{ sap_preconfigure_assert_db_group_name }}' is set to '65536' in /etc/security/limits.d/99-sap.conf."
+  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+  when:
+    - sap_preconfigure_assert_db_group_name is defined
+
+- name: Get the soft limit of nofile for the database group
+  command: "awk '/@{{ sap_preconfigure_assert_db_group_name }}/&&/nofile/&&/soft/{print $NF}' /etc/security/limits.d/99-sap.conf"
+  register: awk_db_group_nofile_soft_result
+  changed_when: no
+  when:
+    - sap_preconfigure_assert_db_group_name is defined
+
+- name: Assert that the soft limit of nofile for the database group is 65536
+  assert:
+    that:
+      - awk_db_group_nofile_soft_result.stdout == '65536'
+    fail_msg: "FAIL: The soft limit of nofile for group '{{ sap_preconfigure_assert_db_group_name }}' is not set to '65536' in /etc/security/limits.d/99-sap.conf!"
+    success_msg: "PASS: The soft limit of nofile for group '{{ sap_preconfigure_assert_db_group_name }}' is set to '65536' in /etc/security/limits.d/99-sap.conf."
+  ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
+  when:
+    - sap_preconfigure_assert_db_group_name is defined
 
 ...
