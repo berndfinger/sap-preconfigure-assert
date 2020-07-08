@@ -9,6 +9,7 @@
   command: awk 'BEGIN{FS="="}/vm.max_map_count/{split ($2, a, " "); print a[1]}' /etc/sysctl.d/sap.conf
   register: sap_conf_max_map_count_result
   changed_when: no
+  ignore_errors: yes
 
 - name: Assert that vm.max_map_count is set to 2000000 in /etc/sysctl.d/sap.conf
   assert:
@@ -35,6 +36,7 @@
   shell: awk 'BEGIN{FS="="}/kernel.sem/{split ($2, a, " "); print a[1], a[2], a[3], a[4]}' /etc/sysctl.d/sap.conf
   register: sap_conf_kernel_sem_result
   changed_when: no
+  ignore_errors: yes
 
 - name: Assert that kernel.sem is set to 1250 256000 100 1024 in /etc/sysctl.d/sap.conf
   assert:
