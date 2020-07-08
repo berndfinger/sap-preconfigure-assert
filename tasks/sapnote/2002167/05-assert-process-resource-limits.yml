@@ -9,6 +9,7 @@
   command: awk '/sapsys/&&/nofile/&&/hard/{print $NF}' /etc/security/limits.d/99-sap.conf
   register: awk_nofile_hard_result
   changed_when: no
+  ignore_errors: yes
 
 - name: Assert that the hard limit of nofile for group sapsys is 32800 
   assert:
@@ -22,6 +23,7 @@
   command: awk '/sapsys/&&/nofile/&&/soft/{print $NF}' /etc/security/limits.d/99-sap.conf
   register: awk_nofile_soft_result
   changed_when: no
+  ignore_errors: yes
 
 - name: Assert that the soft limit of nofile for group sapsys is 32800
   assert:
@@ -35,6 +37,7 @@
   command: "awk '/@{{ sap_preconfigure_assert_db_group_name }}/&&/nofile/&&/hard/{print $NF}' /etc/security/limits.d/99-sap.conf"
   register: awk_db_group_nofile_hard_result
   changed_when: no
+  ignore_errors: yes
   when:
     - sap_preconfigure_assert_db_group_name is defined
 
@@ -52,6 +55,7 @@
   command: "awk '/@{{ sap_preconfigure_assert_db_group_name }}/&&/nofile/&&/soft/{print $NF}' /etc/security/limits.d/99-sap.conf"
   register: awk_db_group_nofile_soft_result
   changed_when: no
+  ignore_errors: yes
   when:
     - sap_preconfigure_assert_db_group_name is defined
 
@@ -69,6 +73,7 @@
   command: awk '/sapsys/&&/nproc/&&/soft/{print $NF}' /etc/security/limits.d/99-sap.conf
   register: awk_nofile_soft_result
   changed_when: no
+  ignore_errors: yes
 
 - name: Assert that the soft limit of nproc is unlimited for group sapsys
   assert:
@@ -82,6 +87,7 @@
   command: "awk '/@{{ sap_preconfigure_assert_db_group_name }}/&&/nproc/&&/soft/{print $NF}' /etc/security/limits.d/99-sap.conf"
   register: awk_db_group_nproc_soft_result
   changed_when: no
+  ignore_errors: yes
   when:
     - sap_preconfigure_assert_db_group_name is defined
 

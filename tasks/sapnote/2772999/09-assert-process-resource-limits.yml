@@ -37,6 +37,7 @@
   command: "awk '/@{{ sap_preconfigure_assert_db_group_name }}/&&/nofile/&&/hard/{print $NF}' /etc/security/limits.d/99-sap.conf"
   register: awk_db_group_nofile_hard_result
   changed_when: no
+  ignore_errors: yes
   when:
     - sap_preconfigure_assert_db_group_name is defined
 
@@ -54,6 +55,7 @@
   command: "awk '/@{{ sap_preconfigure_assert_db_group_name }}/&&/nofile/&&/soft/{print $NF}' /etc/security/limits.d/99-sap.conf"
   register: awk_db_group_nofile_soft_result
   changed_when: no
+  ignore_errors: yes
   when:
     - sap_preconfigure_assert_db_group_name is defined
 
