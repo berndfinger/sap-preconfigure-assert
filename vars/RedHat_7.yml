@@ -27,7 +27,7 @@ __sap_preconfigure_assert_packagegroups_s390x:
   - "network-file-system-client"
   - "performance"
 
-__sap_preconfigure_assert_packagegroups: "{{ lookup('vars','__sap_preconfigure_assert_packagegroups_' + ansible_architecture|string ) }}"
+__sap_preconfigure_assert_packagegroups: "{{ lookup('vars','__sap_preconfigure_assert_packagegroups_' + ansible_architecture) }}"
 
 __sap_preconfigure_assert_packages:
   - uuidd
@@ -42,6 +42,6 @@ __sap_preconfigure_assert_packages:
 # Minimum required package levels for SAP (generic) on RHEL 7.*: none
 __sap_preconfigure_assert_min_packages_7:
 
-__sap_preconfigure_assert_min_packages: "{{ lookup('vars','__sap_preconfigure_assert_min_packages_' + ansible_distribution_major_version|string) }}"
+__sap_preconfigure_assert_min_packages: "{{ lookup('vars','__sap_preconfigure_assert_min_packages_' + ansible_distribution_major_version) }}"
 
 ...
