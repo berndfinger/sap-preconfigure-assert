@@ -11,7 +11,7 @@
   changed_when: no
   ignore_errors: yes
 
-- name: Assert that the hard limit of nofile for group sapsys is 32800 
+- name: Assert that the hard limit of nofile for group sapsys is 32800
   assert:
     that:
       - awk_nofile_hard_result.stdout == '32800'
@@ -41,7 +41,7 @@
   when:
     - sap_preconfigure_assert_db_group_name is defined
 
-- name: Assert that the hard limit of nofile for the database group is 32800 
+- name: Assert that the hard limit of nofile for the database group is 32800
   assert:
     that:
       - awk_db_group_nofile_hard_result.stdout == '32800'
@@ -59,7 +59,7 @@
   when:
     - sap_preconfigure_assert_db_group_name is defined
 
-- name: Assert that the soft limit of nofile for the database group is 32800 
+- name: Assert that the soft limit of nofile for the database group is 32800
   assert:
     that:
       - awk_db_group_nofile_soft_result.stdout == '32800'
@@ -91,7 +91,7 @@
   when:
     - sap_preconfigure_assert_db_group_name is defined
 
-- name: Assert that the soft limit of nproc for the database group is unlimited 
+- name: Assert that the soft limit of nproc for the database group is unlimited
   assert:
     that:
       - awk_db_group_nproc_soft_result.stdout == 'unlimited'

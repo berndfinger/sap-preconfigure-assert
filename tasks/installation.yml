@@ -110,7 +110,7 @@
     package_facts:
 
   - set_fact:
-      reqpkgs: "{{ __sap_preconfigure_assert_min_packages }}"
+      reqpkgs: "{{ __sap_preconfigure_assert_min_pkgs }}"
 
   - debug:
       var: reqpkgs
@@ -143,12 +143,12 @@
     loop_control:
       loop_var: line_item
     ignore_errors: yes
-  when: __sap_preconfigure_assert_min_packages != ""
+  when: __sap_preconfigure_assert_min_pkgs != ""
 
 - debug:
-    msg: "PASS: No minimum required package version defined (variable __sap_preconfigure_assert_min_packages)."
+    msg: "PASS: No minimum required package version defined (variable __sap_preconfigure_assert_min_pkgs)."
   ignore_errors: yes
-  when: __sap_preconfigure_assert_min_packages == ""
+  when: __sap_preconfigure_assert_min_pkgs == ""
 
 - set_fact:
     needs_restarting_command: "needs-restarting -r"

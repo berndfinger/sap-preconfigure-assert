@@ -29,7 +29,7 @@
         fail_msg: "FAIL: Service 'firewalld' is not disabled!"
         success_msg: "PASS: Service 'firewalld' is disabled."
       ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
-    
+
     - name: Assert that firewalld is inactive
       assert:
         that:
@@ -37,13 +37,13 @@
         fail_msg: "FAIL: Service 'firewalld' is active!"
         success_msg: "PASS: Service 'firewalld' is inactive."
       ignore_errors: "{{ sap_preconfigure_assert_ignore_errors|d(false) }}"
-    
+
   when: "'firewalld' in ansible_facts.packages"
 
 - name: Report firewall install status
   debug:
     msg: "PASS: Service 'firewalld' is not installed."
-      
+
   when: "'firewalld' not in ansible_facts.packages"
 
 ...
